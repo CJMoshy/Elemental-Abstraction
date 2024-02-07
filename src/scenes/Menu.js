@@ -4,7 +4,7 @@ class Menu extends Phaser.Scene{
     }
 
     init(){
-        this.TITLESCREEN_SCROLL_RATE = 5
+        this.TITLESCREEN_SCROLL_RATE = 2.5
 
         //config obj
         this.gameConfig = {
@@ -21,7 +21,7 @@ class Menu extends Phaser.Scene{
         
         //add character sprite
         this.player = this.add.sprite(100, 320, 'player').setOrigin(1,0).setScale(0.5)
-        this.player.anims.play('running', true)
+        this.player.anims.play('running_meta', true)
        
 
         //buttons
@@ -50,7 +50,7 @@ class Menu extends Phaser.Scene{
                 this.settingsButton.setAlpha(1)
                 this.settingsButton2.setAlpha(0) 
             }, 150)
-            console.log('settingsutton was clicked')
+            console.log('settingsButton was clicked')
             //TODO: Add sound
         })     
     }
