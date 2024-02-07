@@ -24,4 +24,4 @@ let config = {
 
 let game = new Phaser.Game(config)
 
-let keyJUMP
+let keyJUMP, debugToggle
