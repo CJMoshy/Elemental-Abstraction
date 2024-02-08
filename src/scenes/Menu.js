@@ -5,6 +5,7 @@ class Menu extends Phaser.Scene{
 
     init(){
         this.TITLESCREEN_SCROLL_RATE = 2.5
+        this.titleScreen
 
         //config obj
         this.gameConfig = {

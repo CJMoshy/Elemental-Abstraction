@@ -7,14 +7,17 @@ class Loader extends Phaser.Scene{
         //TODO: loading bar
        
         //load images
+        this.load.image('platform', './assets/images/platform.png')
+        this.load.image('powerup', './assets/images/powerup-anim-1.png')
         this.load.image('titleScreen', './assets/images/title-screen.png')
         this.load.image('startButton', './assets/images/start-button-1.png')
         this.load.image('startButton2', './assets/images/start-button-2.png')
         this.load.image('settingsButton', './assets/images/settings-button.png')
         this.load.image('settingsButton2', './assets/images/settings-button-2.png')
-        this.load.image('platform', './assets/images/platform.png')
+       
 
         //character spritesheet
+        this.load.atlas('particles', './assets/spritesheets/particle/particle-spritesheet.png', './assets/spritesheets/particle/particle-spritesheet.json')
         this.load.atlas('player', './assets/spritesheets/player/vanilla/player-spritesheet.png', './assets/spritesheets/player/vanilla/player-spritesheet.json')
         this.load.atlas('playerAnims', './assets/spritesheets/player/elements/element-anim-spritesheet.png', './assets/spritesheets/player/elements/element-anim-spritesheet.json')
     }

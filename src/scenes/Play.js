@@ -4,24 +4,33 @@ class Play extends Phaser.Scene{
     }
 
     init(data){
+
+        //main scrolling background
+        this.playScreen = null
+        this.scrollRate = data.config.scrollRate
+
+        //platforms
         this.platforms = this.add.group()
     
         this.obstacles = this.add.group()
-        
-        //TODOL fix double jump, its state machine time
-        this.isjumping = false
-
-        this.playerVector = new Phaser.Math.Vector2(0, -1)
-        this.PLAVER_JUMP_VELOCITY = 500
-        this.scrollRate = data.config.scrollRate
-
         this.OBSTACLE_COUNT = 4
+        this.obstacleHeight = [430, 350]
+        this.isObstacle = false // is obstacle on screen?
 
-        this.debugEnabled = true
-
+        this.currentPowerup = null
+ 
+        //TODOL fix double jump, its state machine time
+        this.player = null
+        this.PLAVER_JUMP_VELOCITY = 500
+        this.isjumping = false
+        this.playerVector = new Phaser.Math.Vector2(0, -1)
+       
+        //keybindings
         keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+
         //DEBUG
         debugToggle = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        this.debugEnabled = true
     }
     
     preload(){}
@@ -70,23 +79,34 @@ class Play extends Phaser.Scene{
         //################################################################################
       
 
-        this.playScreen =  this.add.tileSprite(0,0, 800, 450, 'titleScreen').setOrigin(0)
+        //load playscreen
+        if (this.textures.exists('titleScreen')) {
+            this.playScreen =  this.add.tileSprite(0,0, 800, 450, 'titleScreen').setOrigin(0)
+        } else {
+            console.log('texture error');
+        }
 
+        //load ground
         this.ground = this.physics.add.body(0, 700,800, 15).setCollideWorldBounds(true)
+
+        //load player
         this.player = this.physics.add.sprite(100, 300, 'player')
         .setOrigin(1,0)
         .setScale(0.5)
         .setCollideWorldBounds(true)
         .setGravityY(1400)
         .setSize(70,240)
+        
+        //playeraimation state on player
+        this.beginAnimation()
 
-        //generate platforms, obstacles, coins
+        //generate platforms, obstacles, powerup, coins
         this.generatePlatforms()
         this.generateObstacles()
+        this.generatePowerup()
 
-        //playeraimation state
-        this.beginAnimation()
-      
+        //physics
+
         //player/ground collider
         this.physics.add.collider(this.player, this.ground,null,  null, this)
         //player platform collider
@@ -95,23 +115,25 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player, this.obstacles, this.handleObstacleCollision,  null, this)    
     }
 
-    update(){   
-        
+    update(){
+
+        //update scrolling screen
+        this.playScreen.tilePositionX += this.scrollRate
 
         //iterate groups
         this.platforms.children.iterate((x)=>{
             x.update()
         })
-
-
         this.obstacles.children.iterate((x)=>{
             x.update()
         })
+       // this.currentPowerup.update()
 
+        //if no obstacle on screen :: TODO: maybe refactor this
+        if(!this.isObstacle){
+            this.generateObstacles()
+        }
       
-        //update scrolling screen
-        this.playScreen.tilePositionX += this.scrollRate
-
         //jump mechanic
         this.playerVector.normalize()
         if(!this.isjumping && Phaser.Input.Keyboard.JustDown(keyJUMP)){
@@ -126,6 +148,8 @@ class Play extends Phaser.Scene{
 
     }
 
+
+    //helper functions
     generatePlatforms(){
         let x_init = 200
         let x_upd = x_init
@@ -137,28 +161,35 @@ class Play extends Phaser.Scene{
     }
 
     generateObstacles(){
-        //TODO...
-       this.obstacles.add(new Obstacle(this, 790, 430, 'platform', 0, 'ojb1'))
+        let x = Math.floor(Math.random() * (2 -1 + 1 ) + 1)
+        this.obstacles.add(new Obstacle(this, 790, this.obstacleHeight[x - 1], 'platform', 0, 'ojb1'))
+        this.isObstacle = true
     }
+    
+    generatePowerup(){
+        this.currentPowerup = new Powerup(this, 600, 400,'powerup', 0, 'powerup-ready')
+        this.currentPowerup.setBounce
+    }
+
+    beginAnimation(){
+        this.player.anims.play('running_vanilla', true)  
+    }
+    
+
 
     //collision handling between obstacle and player
     handleObstacleCollision(player, obstacle){
-        console.log('collision @obst')
+        
         let obstacleIndex = this.obstacles.getChildren().indexOf(obstacle);
-        if (obstacleIndex !== -1) {
-            // Get the obstacle object
-            let obstacleObject = this.obstacles.getChildren()[obstacleIndex];
-            // Set alpha of the obstacle at the index to 0
-            obstacleObject.setAlpha(0)
-            obstacleObject.destroy()
-        }
+        // Get the obstacle object
+        console.log('collision @obst')
+        let obstacleObject = this.obstacles.getChildren()[obstacleIndex];
+        obstacleObject.destroy()
+        this.isObstacle = false
     }
 
     //TODO: collision handling between powerup and player
     //TODO: coins?
     
-    beginAnimation(){
-        this.player.anims.play('running_vanilla', true)  
-    }
     
 }
