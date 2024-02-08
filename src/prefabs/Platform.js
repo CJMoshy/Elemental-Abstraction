@@ -1,4 +1,4 @@
-class Platform extends Phaser.Physics.Arcade.Sprite{
+class Platform extends Phaser.Physics.Arcade.Sprite{ //this should ideally inherit from item but there are too many properties that need definitions, would bloat item too much
     constructor(scene, x, y, texture, frame, _hascoin=false){
         super(scene, x, y, texture, frame)
 
@@ -17,6 +17,9 @@ class Platform extends Phaser.Physics.Arcade.Sprite{
 
         //properties
         this.hasCoin = _hascoin // does the platform have a coin on it
+        //Todo: this is foul that its redefined, config obj ty
+        this.MIN_PLAT_BOUND = 160
+        this.MAX_PLAT_BOUND = 300
     }
     
 
@@ -27,7 +30,8 @@ class Platform extends Phaser.Physics.Arcade.Sprite{
                 this.body.checkCollision.up = true
             }
             this.setX(game.config.width)
-            this.setY(Math.floor(Math.random() * (300 - 100 + 1)) + 100)//between y=100 and y=300)
+            let y = Math.floor(Math.random() * (this.MAX_PLAT_BOUND - this.MIN_PLAT_BOUND + 1)) + this.MIN_PLAT_BOUND
+            this.setY(y)//between y=220 and y=300)
         }
     }
 }

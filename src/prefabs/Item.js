@@ -10,9 +10,11 @@ class Item extends Phaser.Physics.Arcade.Sprite{
         this.canMove = _canMove
         this.isConsumable = _isConsumable
         this.doesDamage = _doesDamage
+        this.intervalID = null
 
         //!non-physical
         this.INITAL_VELOCITY = -250
+        this.MAX_VELOCITY = 250
 
         //implementing clock
 
@@ -43,18 +45,12 @@ class Item extends Phaser.Physics.Arcade.Sprite{
         }
     }
 
+
+    //powerUp movement
     beginPowerupMovement(){
-        let x = [1,-1]
-        let count
-        setInterval(()=>{ 
-            let vector = new Phaser.Math.Vector2(x[count], 0)//all objects initally move left only
-            vector.normalize()
-            this.setVelocity(this.INITAL_VELOCITY * vector.x, this.INITAL_VELOCITY * vector.y)    
-            if(count === 0){
-                count = 1
-            }else {
-                count = 0
-            }
-        }, 500  )
+        this.intervalID = setInterval(()=>{ 
+            this.setVelocityY(Phaser.Math.Between(this.INITAL_VELOCITY, this.MAX_VELOCITY)) //todo normaiize?
+            //this.setAngularVelocity(Phaser.Math.Between(-200, 200));
+        }, 500)
     }
 }

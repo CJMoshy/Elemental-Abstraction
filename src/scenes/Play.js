@@ -11,12 +11,16 @@ class Play extends Phaser.Scene{
 
         //platforms
         this.platforms = this.add.group()
+        this.MIN_PLAT_BOUND = 160
+        this.MAX_PLAT_BOUND = 300
     
+        //obstacles
         this.obstacles = this.add.group()
         this.OBSTACLE_COUNT = 4
         this.obstacleHeight = [430, 350]
         this.isObstacle = false // is obstacle on screen?
 
+        //powerup
         this.currentPowerup = null
  
         //TODOL fix double jump, its state machine time
@@ -112,7 +116,12 @@ class Play extends Phaser.Scene{
         //player platform collider
         this.physics.add.collider(this.player, this.platforms,()=>{console.log('collision @plat')},  null, this) 
         
-        this.physics.add.collider(this.player, this.obstacles, this.handleObstacleCollision,  null, this)    
+        this.physics.add.collider(this.player, this.obstacles, this.handleObstacleCollision,  null, this)
+
+        this.physics.add.collider(this.player, this.currentPowerup, ()=>{   
+            clearInterval(this.currentPowerup.intervalID) 
+            this.currentPowerup.destroy()
+        },  null, this)  
     }
 
     update(){
@@ -137,7 +146,7 @@ class Play extends Phaser.Scene{
         //jump mechanic
         this.playerVector.normalize()
         if(!this.isjumping && Phaser.Input.Keyboard.JustDown(keyJUMP)){
-            this.isjumping = true
+            //this.isjumping = true
             this.player.anims.pause()
             this.player.setVelocity(this.PLAVER_JUMP_VELOCITY * this.playerVector.x, this.PLAVER_JUMP_VELOCITY * this.playerVector.y)
             this.time.delayedCall(500, ()=>{
@@ -148,14 +157,14 @@ class Play extends Phaser.Scene{
 
     }
 
-
     //helper functions
     generatePlatforms(){
         let x_init = 200
         let x_upd = x_init
         for(let i = 0; i < 4; i++){
-            let y = Math.floor(Math.random() * (300 - 150 + 1)) + 150;
+            let y = Math.floor(Math.random() * (this.MAX_PLAT_BOUND - this.MIN_PLAT_BOUND + 1)) + this.MIN_PLAT_BOUND;
             this.platforms.add(new Platform(this, x_init, y, 'platform', 0).setAlpha(0))
+            console.log('created new platform at y=', y)
             x_init += x_upd
         }
     }
@@ -167,16 +176,17 @@ class Play extends Phaser.Scene{
     }
     
     generatePowerup(){
-        this.currentPowerup = new Powerup(this, 600, 400,'powerup', 0, 'powerup-ready')
-        this.currentPowerup.setBounce
+        this.currentPowerup = new Powerup(this, 600, 400,'powerup-red', 0, 'powerup-ready')
+        .setScale(2)
+        .setCircle(5, true)
+        .setOffset(15,9)
+        .setBounce(1)
     }
 
-    beginAnimation(){
+    beginAnimation(state){
         this.player.anims.play('running_vanilla', true)  
     }
     
-
-
     //collision handling between obstacle and player
     handleObstacleCollision(player, obstacle){
         
@@ -188,7 +198,6 @@ class Play extends Phaser.Scene{
         this.isObstacle = false
     }
 
-    //TODO: collision handling between powerup and player
     //TODO: coins?
     
     

@@ -8,7 +8,7 @@ class Loader extends Phaser.Scene{
        
         //load images
         this.load.image('platform', './assets/images/platform.png')
-        this.load.image('powerup', './assets/images/powerup-anim-1.png')
+        this.load.image('powerup-red', './assets/images/powerup-red.png')
         this.load.image('titleScreen', './assets/images/title-screen.png')
         this.load.image('startButton', './assets/images/start-button-1.png')
         this.load.image('startButton2', './assets/images/start-button-2.png')
