@@ -7,13 +7,17 @@ class Loader extends Phaser.Scene{
         //TODO: loading bar
        
         //load images
+        this.load.image('obstacle-ground', './assets/images/obstacle-ground.png')
         this.load.image('platform', './assets/images/platform.png')
+        this.load.image('powerup-blue', './assets/images/powerup-blue.png')
+        this.load.image('powerup-green', './assets/images/powerup-green.png')
         this.load.image('powerup-red', './assets/images/powerup-red.png')
-        this.load.image('titleScreen', './assets/images/title-screen.png')
+        this.load.image('powerup-teal', './assets/images/powerup-teal.png')
+        this.load.image('settingsButton', './assets/images/settings-button-1.png')
+        this.load.image('settingsButton2', './assets/images/settings-button-2.png')
         this.load.image('startButton', './assets/images/start-button-1.png')
         this.load.image('startButton2', './assets/images/start-button-2.png')
-        this.load.image('settingsButton', './assets/images/settings-button.png')
-        this.load.image('settingsButton2', './assets/images/settings-button-2.png')
+        this.load.image('titleScreen', './assets/images/title-screen.png')
        
 
         //character spritesheet
@@ -221,6 +225,23 @@ class Loader extends Phaser.Scene{
             frameRate: 15,
             repeat: -1
         })
+
+        
+        this.anims.create({
+            key:'particle-anim',
+            frames: this.anims.generateFrameNames('particles', {
+                prefix: 'particle-anim-',
+                start: 1,
+                end: 4
+            }),
+            frameRate: 15,
+            repeat: -1
+        })
+
+        
+
+
+        //Enter menu
         this.scene.start('menuScene')
     }   
 

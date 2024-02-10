@@ -5,7 +5,6 @@ class Menu extends Phaser.Scene{
 
     init(){
         this.TITLESCREEN_SCROLL_RATE = 2.5
-        this.titleScreen
 
         //config obj
         this.gameConfig = {
@@ -21,9 +20,9 @@ class Menu extends Phaser.Scene{
     
         
         //add character sprite
-        this.player = this.add.sprite(100, 320, 'player').setOrigin(1,0).setScale(0.5)
+        this.player = new Player(this, 100, 325, 'player', 0).setGravity(0)
         this.player.anims.play('running_meta', true)
-       
+     
 
         //buttons
         this.startButton = this.add.sprite(200, 350, 'startButton').setInteractive()
@@ -32,18 +31,15 @@ class Menu extends Phaser.Scene{
         this.settingsButton2 = this.add.sprite(600, 350, 'settingsButton2').setAlpha(0)
         
         //button logic
+        //TODO: maybe if you want, deal with button anims, but this is not any means close to prio
         this.startButton.on('pointerdown', ()=>{
+            console.log('startButtonDown was clicked')
             this.startButton.setAlpha(0)
             this.startButton2.setAlpha(1)
-            setTimeout(()=>{
-                this.startButton.setAlpha(1)
-                this.startButton2.setAlpha(0) 
-            }, 150)
-            console.log('startButton was clicked')
             this.scene.start('playScene', { config: this.gameConfig})
-            //TODO: Add sound
         })
 
+    
         this.settingsButton.on('pointerdown', ()=>{
             this.settingsButton.setAlpha(0)
             this.settingsButton2.setAlpha(1)
