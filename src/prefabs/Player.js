@@ -4,13 +4,20 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
-        this.setOrigin(1,0)
+        this.setOrigin(0)
         this.setScale(0.5)
         this.setCollideWorldBounds(true)
         this.setGravityY(1400)
         this.setSize(70,240)
 
-        //TODO: this.jumpAmmt = 1 ->maybe
+        this.scoreMultiplier = 1
+
+        this.PLAVER_JUMP_VELOCITY = 550
+        this.isjumping = false
+        this.playerVector = new Phaser.Math.Vector2(0, -1)
+        this.playerVector.normalize()
+
+
         this.lastCollision = null
         
         this.FSM = new StateMachine('vanilla', {
@@ -30,12 +37,24 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             airEarthWater: new airEarthWaterState(),
             earthWaterFire: new earthWaterFireState(),
             meta: new metaState()
-        }, [scene, this])
-
-        
+        }, [scene, this])   
     }
 
+
     update(){
+        //jump mechanic
+        if(!this.isjumping && Phaser.Input.Keyboard.JustDown(keyJUMP)){
+            this.anims.pause()
+            this.isjumping = true
+            this.setVelocity(this.PLAVER_JUMP_VELOCITY * this.playerVector.x, this.PLAVER_JUMP_VELOCITY * this.playerVector.y)
+            this.scene.time.delayedCall(500, ()=>{
+                this.scene.player.anims.resume()
+            },null, null)
+        }
+
+        if(this.y > 150){
+            this.isjumping = false
+        }
     }
 }
 
@@ -151,6 +170,7 @@ class airState extends State{
 class fireAirState extends State{
     enter(scene, player){
         player.anims.play('running_fire_air')
+        player.scoreMultiplier = 2
     }
  
     execute(scene, player){
@@ -168,6 +188,7 @@ class fireAirState extends State{
 class fireEarthState extends State{
     enter(scene, player){
         player.anims.play('running_fire_earth')
+        player.scoreMultiplier = 2
     }
  
     execute(scene, player){
@@ -185,6 +206,7 @@ class fireEarthState extends State{
 class fireWaterState extends State{
     enter(scene, player){
         player.anims.play('running_fire_water')
+        player.scoreMultiplier = 2
     }
 
     execute(scene, player){
@@ -202,6 +224,7 @@ class fireWaterState extends State{
 class airEarthState extends State{
     enter(scene, player){
         player.anims.play('running_earth_air')
+        player.scoreMultiplier = 2
     }
  
     execute(scene, player){
@@ -220,6 +243,7 @@ class airEarthState extends State{
 class airWaterState extends State{
     enter(scene, player){
         player.anims.play('running_air_water')
+        player.scoreMultiplier = 2
     }
  
     execute(scene, player){
@@ -237,6 +261,7 @@ class airWaterState extends State{
 class earthWaterState extends State{
     enter(scene, player){
         player.anims.play('running_earth_water')
+        player.scoreMultiplier = 2
     }
  
     execute(scene, player){
@@ -254,6 +279,7 @@ class earthWaterState extends State{
 class fireAirEarthState extends State{
     enter(scene, player){
         player.anims.play('running_earth_air_fire')
+        player.scoreMultiplier = 3
     }
  
     execute(scene, player){
@@ -268,6 +294,7 @@ class fireAirEarthState extends State{
 class fireAirWaterState extends State{
     enter(scene, player){
         player.anims.play('running_air_fire_water')
+        player.scoreMultiplier = 3
     }
  
     execute(scene, player){
@@ -282,6 +309,7 @@ class fireAirWaterState extends State{
 class airEarthWaterState extends State{
     enter(scene, player){
         player.anims.play('running_air_earth_water')
+        player.scoreMultiplier = 3
     }
  
     execute(scene, player){
@@ -296,6 +324,7 @@ class airEarthWaterState extends State{
 class earthWaterFireState extends State{
     enter(scene, player){
         player.anims.play('running_earth_water_fire')
+        player.scoreMultiplier = 3
     }
  
     execute(scene, player){
@@ -310,46 +339,7 @@ class earthWaterFireState extends State{
 class metaState extends State{
     enter(scene, player){
         player.anims.play('running_meta')
+        player.scoreMultiplier = 4
     }
- 
 }
 
-// class fireState extends State{
-//     enter(scene, player){
-//         player.anims.play('running_fire')
-//     }
-
-//     execute(scene, player){
-//         switch(player.lastCollision){
-//             case 'powerup-blue': //collided with blue
-//                 this.statemachine.transition('fireWater')
-//                 break
-//             case 'powerup-green': //collided with blue
-//                 this.statemachine.transition('fireEarth')
-//                 break
-//             case 'powerup-teal': //collided with blue
-//                 this.statemachine.transition('fireAir')
-//                 break
-//         }
-//     }
-// }
-
-// class fireState extends State{
-//     enter(scene, player){
-//         player.anims.play('running_fire')
-//     }
-
-//     execute(scene, player){
-//         switch(player.lastCollision){
-//             case 'powerup-blue': //collided with blue
-//                 this.statemachine.transition('fireWater')
-//                 break
-//             case 'powerup-green': //collided with blue
-//                 this.statemachine.transition('fireEarth')
-//                 break
-//             case 'powerup-teal': //collided with blue
-//                 this.statemachine.transition('fireAir')
-//                 break
-//         }
-//     }
-// }

@@ -29,13 +29,13 @@ class Play extends Phaser.Scene{
  
         //TODOL fix double jump, its state machine time
         this.player = null
-        this.PLAVER_JUMP_VELOCITY = 500
+        this.PLAVER_JUMP_VELOCITY = 550
         this.isjumping = false
         this.playerVector = new Phaser.Math.Vector2(0, -1)
-       
-        //keybindings
-        keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
+        //keybinds 
+        keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+    
         //DEBUG
         debugToggle = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         this.debugEnabled = true
@@ -70,9 +70,11 @@ class Play extends Phaser.Scene{
         *  Include in-game credits for all roles, assets, music, etc. (1)
         *
         * */
-            //WIN CONDIITON
-            // THERE ARE SPIKES AT THE BACK OF THE SCREEN
-            // DONT GET PUSHED BY TH OBSTACLES
+            //Winning
+            //your score progresses statically
+            //as you collect element powerups, you gain a permanent score multiplier
+            //go as far as you can with all four powerups collected to get the highest score 
+
         //############
         //TODO: state machine for player anims
         //TODO: powerups
@@ -140,9 +142,12 @@ class Play extends Phaser.Scene{
         //update scrolling screen
         this.playScreen.tilePositionX += this.scrollRate
 
+        //update player
+        this.player.update()
+
         //state
         this.player.FSM.step()
-
+        
         //iterate groups
         let count = 0
         let keys = Object.keys(this.platformPositions)
@@ -158,20 +163,7 @@ class Play extends Phaser.Scene{
         //if no obstacle on screen :: TODO: maybe refactor this
         if(!this.isObstacle){
             this.generateObstacles()
-        }
-
-        
-        //jump mechanic
-        this.playerVector.normalize()
-        if(!this.isjumping && Phaser.Input.Keyboard.JustDown(keyJUMP)){
-            this.isjumping = true
-            this.player.anims.pause()
-            this.player.setVelocity(this.PLAVER_JUMP_VELOCITY * this.playerVector.x, this.PLAVER_JUMP_VELOCITY * this.playerVector.y)
-            this.time.delayedCall(750, ()=>{
-                this.player.anims.resume()
-                this.isjumping = false
-            },null, null)
-        }
+        }  
     }
 
     //helper functions
@@ -201,10 +193,12 @@ class Play extends Phaser.Scene{
         let color = this.powerupKeys[rand]
         this.powerupKeys.splice(rand, 1);
 
-        this.time.delayedCall(2000, ()=>{
-            this.currentPowerup = new Powerup(this, 800, 400, color, 0, 'powerup-ready')
+        let y = Math.floor(Math.random() * (game.config.height));
+
+        this.time.delayedCall(1000, ()=>{
+            this.currentPowerup = new Powerup(this, 800, y, color, 0, 'powerup-ready')
             this.physics.add.collider(this.player, this.currentPowerup, ()=>{    //we have to implemenmt collider here - or do we - beacause create assigns collider to null bc not generated
-                this.player.setVelocity(0)
+                this.player.setVelocity(this.player.body.velocity.x, this.player.body.velocity.y)
                 this.player.lastCollision = color
                 clearInterval(this.currentPowerup.intervalID) 
                 this.currentPowerup.destroy()
@@ -212,7 +206,7 @@ class Play extends Phaser.Scene{
             },  null, this)  
         }, null, this)
     }
-
+   
     
     //collision handling between obstacle and player
     handleObstacleCollision(player, obstacle){  
@@ -220,7 +214,7 @@ class Play extends Phaser.Scene{
         // Get the obstacle object
         console.log('collision @obst')
         //TODO: audio
-        this.player.setVelocity(-100)
+        this.player.setVelocity(-100,-1)
         this.time.delayedCall(500, ()=>{this.player.setVelocityX(100)})
         this.time.delayedCall(1000, ()=>{this.player.setVelocity(0)})
         let obstacleObject = this.obstacles.getChildren()[obstacleIndex];

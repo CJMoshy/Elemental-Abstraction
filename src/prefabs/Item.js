@@ -5,12 +5,9 @@ class Item extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
-        //non-physical
-        this.scene = scene
+        //non physical
         this.name = _name
         this.canMove = _canMove
-        this.isConsumable = _isConsumable
-        this.doesDamage = _doesDamage
         this.intervalID = null
 
         //!non-physical
@@ -22,33 +19,11 @@ class Item extends Phaser.Physics.Arcade.Sprite{
             vector.normalize()
             this.setVelocity(this.INITAL_VELOCITY * vector.x, this.INITAL_VELOCITY * vector.y)  
         }
-
-        if(this.name == 'obstacle'){
-            this.setScale(4)
-            .setSize(12,5)
-            .setOffset(10, 10)
-        } 
-
-        if(this.name == 'powerup-ready'){
-            this.setScale(2)
-            .setCircle(5, true)
-            .setOffset(15,9)
-            .setBounce(1)
-            this.beginPowerupMovement()
-            this.setCollideWorldBounds(true)
-        } 
     }
 
     update(){
         if(this.x <= 0){
             this.setX(game.config.width)
         }
-    }
-
-    //powerUp movement
-    beginPowerupMovement(){
-        this.intervalID = setInterval(()=>{ 
-            this.setVelocityY(Phaser.Math.Between(this.INITAL_VELOCITY, this.MAX_VELOCITY)) //todo normaiize?
-        }, 500)
-    }
+    }    
 }

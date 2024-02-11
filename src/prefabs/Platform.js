@@ -51,10 +51,10 @@ class Platform extends Phaser.Physics.Arcade.Sprite{ //this should ideally inher
             }
             if(this.canReset){
                 this.canReset = false
-                if(this.x < -150 || this.x > 800){ //only resize y when the platform is not on camera
+                if(this.x < 0 || this.x > 800){ //only resize y when the platform is not on camera
                     this.setY(Math.floor(Math.random() * (this.MAX_PLAT_BOUND - this.MIN_PLAT_BOUND + 1)) + this.MIN_PLAT_BOUND)
                 }
-                this.scene.time.delayedCall(150, ()=> { //give the update loop a (mili)second to actually update
+                this.scene.time.delayedCall(250, ()=> { //give the update loop a (mili)second to actually update
                     this.setX(game.config.width)
                 })
             }
