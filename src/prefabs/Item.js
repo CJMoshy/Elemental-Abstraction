@@ -1,5 +1,5 @@
 class Item extends Phaser.Physics.Arcade.Sprite{
-    constructor(scene, x, y, texture, frame, _name='unknown', _canMove=false, _isConsumable=false, _doesDamage=false){  
+    constructor(scene, x, y, texture, frame, _name='unknown', _canMove=false, v_init=-250){  
         super(scene, x, y, texture, frame)
     
         scene.add.existing(this)
@@ -11,7 +11,7 @@ class Item extends Phaser.Physics.Arcade.Sprite{
         this.intervalID = null
 
         //!non-physical
-        this.INITAL_VELOCITY = -250
+        this.INITAL_VELOCITY = v_init
         this.MAX_VELOCITY = 250
 
         if(this.canMove){
@@ -19,11 +19,13 @@ class Item extends Phaser.Physics.Arcade.Sprite{
             vector.normalize()
             this.setVelocity(this.INITAL_VELOCITY * vector.x, this.INITAL_VELOCITY * vector.y)  
         }
+
+        scene.events.on('update', this.update, this)
     }
 
     update(){
-        if(this.x <= 0){
-            this.setX(game.config.width)
+        if(this.x < 0){
+            this.destroy()
         }
     }    
 }

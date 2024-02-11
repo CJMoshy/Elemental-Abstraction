@@ -1,11 +1,13 @@
 class Powerup extends Item{ 
-    constructor(scene, x, y, texture, frame, _name="unknown", _canMove=true){
+    constructor(scene, x, y, texture, frame, _name="powerup", _canMove=true){
         super(scene, x, y, texture, frame, _name, _canMove)
         this.setScale(2)
         .setCircle(5, true)
         .setOffset(15,9)
         .setBounce(1)
         .setCollideWorldBounds(true)
+
+        //random movement 
         this.beginPowerupMovement()   
     } 
 

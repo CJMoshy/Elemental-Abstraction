@@ -39,7 +39,6 @@ class Menu extends Phaser.Scene{
             this.scene.start('playScene', { config: this.gameConfig})
         })
 
-    
         this.settingsButton.on('pointerdown', ()=>{
             this.settingsButton.setAlpha(0)
             this.settingsButton2.setAlpha(1)

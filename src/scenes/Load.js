@@ -7,19 +7,20 @@ class Loader extends Phaser.Scene{
         //TODO: loading bar
        
         //load images
+        this.load.image('menu-button', './assets/images/menu-button.png')
         this.load.image('obstacle-ground', './assets/images/obstacle-ground.png')
         this.load.image('platform', './assets/images/platform.png')
         this.load.image('powerup-blue', './assets/images/powerup-blue.png')
         this.load.image('powerup-green', './assets/images/powerup-green.png')
         this.load.image('powerup-red', './assets/images/powerup-red.png')
         this.load.image('powerup-teal', './assets/images/powerup-teal.png')
+        this.load.image('restart-button', './assets/images/restart-button.png')
         this.load.image('settingsButton', './assets/images/settings-button-1.png')
         this.load.image('settingsButton2', './assets/images/settings-button-2.png')
         this.load.image('startButton', './assets/images/start-button-1.png')
         this.load.image('startButton2', './assets/images/start-button-2.png')
         this.load.image('titleScreen', './assets/images/title-screen.png')
        
-
         //character spritesheet
         this.load.atlas('particles', './assets/spritesheets/particle/particle-spritesheet.png', './assets/spritesheets/particle/particle-spritesheet.json')
         this.load.atlas('player', './assets/spritesheets/player/vanilla/player-spritesheet.png', './assets/spritesheets/player/vanilla/player-spritesheet.json')
@@ -31,7 +32,6 @@ class Loader extends Phaser.Scene{
         window.localStorage ? console.log('local storage enabled') : console.log('no local storage supported')
         
         //create animations
-
         //vanilla
         this.anims.create({
             key: 'running_vanilla',
@@ -237,9 +237,6 @@ class Loader extends Phaser.Scene{
             frameRate: 15,
             repeat: -1
         })
-
-        
-
 
         //Enter menu
         this.scene.start('menuScene')

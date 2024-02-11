@@ -7,7 +7,7 @@ let config = {
     type: Phaser.AUTO,
     width: 800,
     height: 450,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     pixelArt: true,
     physics: {
         default: 'arcade',
@@ -19,9 +19,9 @@ let config = {
             }
         }
     },  
-    scene: [Loader, Menu, Play]
+    scene: [Loader, Menu, Play, Listener]
 }
 
 let game = new Phaser.Game(config)
 
-let debugToggle, keyJUMP
+let debugToggle, keyJUMP, keySTART, keyRESET

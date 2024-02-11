@@ -4,22 +4,31 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
+
+        //general properties
+        this.setVelocity(0)
         this.setOrigin(0)
         this.setScale(0.5)
         this.setCollideWorldBounds(true)
         this.setGravityY(1400)
         this.setSize(70,240)
 
+        //score, gamestate
         this.scoreMultiplier = 1
+        this.lives = 5
 
+
+        //jump stuff
         this.PLAVER_JUMP_VELOCITY = 550
         this.isjumping = false
         this.playerVector = new Phaser.Math.Vector2(0, -1)
         this.playerVector.normalize()
 
+        //positioning on map
+        this.resetFlag = true
 
-        this.lastCollision = null
-        
+        //states
+        this.lastCollision = null    
         this.FSM = new StateMachine('vanilla', {
             vanilla: new mainState(),
             fire: new fireState(),
@@ -42,6 +51,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
 
     update(){
+
+        this.FSM.step()
         //jump mechanic
         if(!this.isjumping && Phaser.Input.Keyboard.JustDown(keyJUMP)){
             this.anims.pause()
@@ -52,10 +63,32 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             },null, null)
         }
 
-        if(this.y > 150){
+        if(this.y > 175){ //enforce jump height -> TODO maybe change this to jump cooldown
             this.isjumping = false
         }
+
+        if(this.resetFlag){
+            this.fixPosition()
+        }
+
     }
+ 
+    fixPosition(){
+        if(!this.isjumping){
+            if(this.x < 95){
+                this.setVelocityX(100)
+            }
+
+            if(this.x > 95 && this.x < 105){
+                this.setVelocityX(0)
+            }
+
+            if(this.x > 105){
+                this.setVelocityX(-100)
+            }
+        }
+    }
+
 }
 
 //FA, FE, FW, AE, AW, EW
