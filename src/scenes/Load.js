@@ -5,7 +5,18 @@ class Loader extends Phaser.Scene{
 
     preload(){
         //TODO: loading bar
-       
+        
+        let loadingBar = this.add.graphics()
+        this.load.on('progress', (value)=>{
+            loadingBar.clear()
+            loadingBar.fillStyle(0x00FF00, 1)
+            loadingBar.fillRect()
+        })
+
+        this.load.on('complete', ()=>{
+            loadingBar.destroy()
+        })
+
         //load images
         this.load.image('menu-button', './assets/images/menu-button.png')
         this.load.image('obstacle-ground', './assets/images/obstacle-ground.png')
@@ -16,15 +27,19 @@ class Loader extends Phaser.Scene{
         this.load.image('powerup-teal', './assets/images/powerup-teal.png')
         this.load.image('restart-button', './assets/images/restart-button.png')
         this.load.image('settingsButton', './assets/images/settings-button-1.png')
-        this.load.image('settingsButton2', './assets/images/settings-button-2.png')
         this.load.image('startButton', './assets/images/start-button-1.png')
-        this.load.image('startButton2', './assets/images/start-button-2.png')
         this.load.image('titleScreen', './assets/images/title-screen.png')
        
         //character spritesheet
         this.load.atlas('particles', './assets/spritesheets/particle/particle-spritesheet.png', './assets/spritesheets/particle/particle-spritesheet.json')
         this.load.atlas('player', './assets/spritesheets/player/vanilla/player-spritesheet.png', './assets/spritesheets/player/vanilla/player-spritesheet.json')
         this.load.atlas('playerAnims', './assets/spritesheets/player/elements/element-anim-spritesheet.png', './assets/spritesheets/player/elements/element-anim-spritesheet.json')
+
+        //audio
+        this.load.audio('main-soundtrack', ['./assets/audio/main.mp3'])
+        this.load.audio('powerup', './assets/audio/powerup.wav')
+        this.load.audio('hit', './assets/audio/hit.wav')
+        this.load.audio('gameover', './assets/audio/gameover.wav')
     }
 
     create(){

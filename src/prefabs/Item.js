@@ -1,3 +1,5 @@
+//Item base class defines all game objects that are not the player
+//class handles movement of items as well as tracks important information about the items
 class Item extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, texture, frame, _name='unknown', _canMove=false, v_init=-250){  
         super(scene, x, y, texture, frame)
@@ -20,6 +22,7 @@ class Item extends Phaser.Physics.Arcade.Sprite{
             this.setVelocity(this.INITAL_VELOCITY * vector.x, this.INITAL_VELOCITY * vector.y)  
         }
 
+        //forced update without needing to explicitly call update for each item that inherits
         scene.events.on('update', this.update, this)
     }
 

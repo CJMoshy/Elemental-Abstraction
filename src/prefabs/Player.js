@@ -4,7 +4,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
-
         //general properties
         this.setVelocity(0)
         this.setOrigin(0)
@@ -15,8 +14,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         //score, gamestate
         this.scoreMultiplier = 1
-        this.lives = 5
-
+        this.lives = 1
 
         //jump stuff
         this.PLAVER_JUMP_VELOCITY = 550
@@ -49,7 +47,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         }, [scene, this])   
     }
 
-
     update(){
 
         this.FSM.step()
@@ -63,16 +60,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             },null, null)
         }
 
-        if(this.y > 175){ //enforce jump height -> TODO maybe change this to jump cooldown
+        if(this.y > 125){ //enforce jump height -> TODO maybe change this to jump cooldown
             this.isjumping = false
         }
 
         if(this.resetFlag){
             this.fixPosition()
         }
-
     }
- 
+    
+    //helper function to keep the player around a relative position
     fixPosition(){
         if(!this.isjumping){
             if(this.x < 95){
@@ -90,10 +87,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
 }
-
-//FA, FE, FW, AE, AW, EW
-
-//FAE, FAW, AEW, EWF
 
 class mainState extends State{
     enter(scene, player){
@@ -272,7 +265,6 @@ class airEarthState extends State{
     }
 }
 
-
 class airWaterState extends State{
     enter(scene, player){
         player.anims.play('running_air_water')
@@ -291,6 +283,7 @@ class airWaterState extends State{
     }
 
 }
+
 class earthWaterState extends State{
     enter(scene, player){
         player.anims.play('running_earth_water')
@@ -307,8 +300,8 @@ class earthWaterState extends State{
                 return
         }
     }
-
 }
+
 class fireAirEarthState extends State{
     enter(scene, player){
         player.anims.play('running_earth_air_fire')
@@ -322,8 +315,8 @@ class fireAirEarthState extends State{
                 return
         }
     }
-
 }
+
 class fireAirWaterState extends State{
     enter(scene, player){
         player.anims.play('running_air_fire_water')
@@ -337,8 +330,8 @@ class fireAirWaterState extends State{
                 return
         }
     }
-
 }
+
 class airEarthWaterState extends State{
     enter(scene, player){
         player.anims.play('running_air_earth_water')
@@ -352,8 +345,8 @@ class airEarthWaterState extends State{
                 return
         }
     }
-
 }
+
 class earthWaterFireState extends State{
     enter(scene, player){
         player.anims.play('running_earth_water_fire')

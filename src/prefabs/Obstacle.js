@@ -12,7 +12,8 @@ class Obstacle extends Item {
       scene.player.lives -= 1
       console.log(scene.player.lives)
       scene.player.resetFlag = false
-      scene.player.setVelocity(-150,-1) //knockback
+      scene.player.setVelocity(-150,-1) //knockback effect
+      scene.sound.play('hit')
       this.destroy()
       scene.time.delayedCall(350, ()=>{scene.player.resetFlag = true})
     }, null, this)

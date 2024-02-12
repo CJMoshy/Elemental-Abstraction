@@ -17,14 +17,8 @@ class Play extends Phaser.Scene{
         this.id_container = []
         this.id_a 
         this.id_b
-        this.id_c
         this.id_d
         this.id_e
-        this.id_container.push(this.id_a)
-        this.id_container.push(this.id_b)
-        this.id_container.push(this.id_c)
-        this.id_container.push(this.id_d)
-        this.id_container.push(this.id_e)
 
         //obstacle height, velocity move to obstacle
         this.obstacleHeight = [430, 350]
@@ -101,7 +95,16 @@ class Play extends Phaser.Scene{
                 this.physics.world.debugGraphic.setVisible(this.debugEnabled);
             }, this);
         //################################################################################
-
+        
+        //audio
+        this.sound.removeAll()
+        this.music = this.sound.add('main-soundtrack', {
+            mute: false,
+            volume: 0.1,
+            rate: 1, 
+            loop: true
+        })
+        this.music.play()
 
         //load backgorund
         if(this.textures.exists('titleScreen')){
@@ -115,7 +118,7 @@ class Play extends Phaser.Scene{
         }
 
         //score text 
-        this.scoreLeft = this.add.text(50 , 15, 'Score: ' + this.score.toString(), {
+        this.scoreLeft = this.add.text(50 , 15, 'score → ' + this.score.toString(), {
             fontFamily: 'Comic Sans MS',
             fontSize : '28px',
             color : '#000000',
@@ -124,16 +127,16 @@ class Play extends Phaser.Scene{
             fixedWidth : 0,
         })
 
-        this.multiplierText = this.add.text(50 , 50, 'Current Multiplier -> ' + this.player.scoreMultiplier.toString(), {
+        this.multiplierText = this.add.text(50 , 50, 'elements → ' + this.player.scoreMultiplier.toString(), {
             fontFamily: 'Comic Sans MS',
-            fontSize : '28px',
+            fontSize : '20px',
             color : '#000000',
             align : 'right', 
             padding : {top : 5, bottom : 5},
             fixedWidth : 0,
         })
 
-        this.distTrav = this.add.text(700 , 15, this.distanceTraveled + ' m', {
+        this.distTrav = this.add.text(700 , 50, this.distanceTraveled + ' m', {
             fontFamily: 'Comic Sans MS',
             fontSize : '28px',
             color : '#000000',
@@ -149,7 +152,7 @@ class Play extends Phaser.Scene{
         //generate platforms, obstacles, powerup, coins
         this.generatePlatforms()
         this.generateObstacles()
-        this.generatePowerup()
+        this.time.delayedCall(5000, ()=>{this.generatePowerup()})
 
         //physics
         //player/ground collider
@@ -163,17 +166,13 @@ class Play extends Phaser.Scene{
 
         this.id_b = setInterval(()=>{
             this.score += 1*this.player.scoreMultiplier
-            this.scoreLeft.text = 'Score: ' + this.score.toString()
-        }, 750)
-
-        this.id_c = setInterval(()=>{
+            this.scoreLeft.text = 'score → ' + this.score.toString()
             this.distanceTraveled += 1
             this.distTrav.text = (this.distanceTraveled.toString() + ' m')
-        }, 250)
+        }, 500)
 
         this.id_container.push(this.id_a)
         this.id_container.push(this.id_b)
-        this.id_container.push(this.id_c)
 
     }
 
@@ -185,8 +184,10 @@ class Play extends Phaser.Scene{
             this.id_container.forEach(element => {
                 clearInterval(element)
             })
-            clearInterval(this.currentPowerup.intervalID)
-            this.scene.start('Listener')
+            if(this.currentPowerup != null){
+                clearInterval(this.currentPowerup.intervalID)
+            }
+            this.scene.start('Listener', {finalScore: this.score})
         } else{
             //update scrolling screen
             this.playScreen.tilePositionX += this.scrollRate
@@ -194,7 +195,7 @@ class Play extends Phaser.Scene{
             //update player
             this.player.update()
 
-            this.multiplierText.text = 'Current Multiplier -> ' + this.player.scoreMultiplier.toString()
+            this.multiplierText.text = 'elements → ' + this.player.scoreMultiplier.toString()
         }
     }
 
@@ -211,7 +212,7 @@ class Play extends Phaser.Scene{
         this.id_e = setInterval(()=>{
             let y = Math.floor(Math.random() * (425 - 150 + 1)) + 150;
             this.add.sprite(new Obstacle(this, 790, y, 'obstacle-ground', 0, 'obstacle', true, this.velocityx))
-        }, 1500)
+        }, 2500)
         this.id_container.push(this.id_e)
     }
     
@@ -225,14 +226,15 @@ class Play extends Phaser.Scene{
         let rand = Math.floor(Math.random() * this.powerupKeys.length);
         let color = this.powerupKeys[rand]
         this.powerupKeys.splice(rand, 1);
-
         let y = Math.floor(Math.random() * (game.config.height));
-        this.time.delayedCall(1000, ()=>{
+    
+        this.time.delayedCall(4000, ()=>{
             this.currentPowerup = new Powerup(this, 800, y, color, 0, 'powerup-ready')
             this.physics.add.collider(this.player, this.currentPowerup, ()=>{    //we have to implemenmt collider here - or do we - beacause create assigns collider to null bc not generated
                 this.player.setVelocity(this.player.body.velocity.x, this.player.body.velocity.y)
                 this.player.lastCollision = color
                 clearInterval(this.currentPowerup.intervalID) 
+                this.sound.play('powerup')
                 this.currentPowerup.destroy()
                 this.generatePowerup()
             },  null, this)  
