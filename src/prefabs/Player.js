@@ -14,7 +14,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         //score, gamestate
         this.scoreMultiplier = 1
-        this.lives = 1
+        this.lives = 5
 
         //jump stuff
         this.PLAVER_JUMP_VELOCITY = 550
