@@ -12,6 +12,15 @@ class Powerup extends Item{
         super.intervalID = setInterval(()=>{ 
             this.setVelocityY(Phaser.Math.Between(this.INITAL_VELOCITY, this.MAX_VELOCITY)) //todo normaiize?
         }, 250)
+
+        scene.physics.add.collider(scene.player, this, ()=>{ 
+            scene.player.setVelocity(scene.player.body.velocity.x, scene.player.body.velocity.y)
+            scene.player.lastCollision = _name
+            clearInterval(this.intervalID) 
+            scene.sound.play('powerup')
+            this.destroy()
+            scene.generatePowerup()
+        },  null, this)  
     } 
 
     update(){

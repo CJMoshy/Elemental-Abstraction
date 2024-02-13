@@ -1,6 +1,6 @@
-class Listener extends Phaser.Scene{
+class GameOver extends Phaser.Scene{
     constructor(){
-        super('Listener')
+        super('GameOver')
     }
     
     init(){
@@ -8,12 +8,13 @@ class Listener extends Phaser.Scene{
         this.highScore = 0
     }
     create(data){
-
+        //last runs score
         this.checkHighScore(data.finalScore)
 
-        this.time.delayedCall(1000, ()=> {this.sound.play('gameover')
+        //text formatting
+        this.time.delayedCall(1000, ()=> {this.sound.play('gameover') //gives cool effect
 
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER',{
+            this.add.text(game.config.width/2, game.config.height/2 - 25, 'GAME OVER',{
                 fontFamily: 'Comic Sans MS',
                 fontSize : '28px',
                 color : '#0000FF',
@@ -51,22 +52,23 @@ class Listener extends Phaser.Scene{
                     fixedWidth : 0,
                 }).setOrigin(0.5)
             }
+        //nav buttons
             this.restartButton = this.add.sprite(game.config.width/2 - 200, 350, 'restart-button').setInteractive()  
             this.restartButton.on('pointerdown', ()=> {
-                console.log('restart was clicked')
+                this.sound.play('click')
                 this.scene.start('playScene')
             })
 
             this.menuButton = this.add.sprite(game.config.width/2 + 200, 350, 'menu-button').setInteractive()  
             this.menuButton.on('pointerdown', ()=> {
-                console.log('menu was clicked')
+                this.sound.play('click')
                 this.scene.start('menuScene')
             })
         })
     }
 
-    checkHighScore(level){
-
+    checkHighScore(level){//credit nathan altice for the framework of this function
+        //function determines if last games score is higher than locally saved highscore and responds appropriately
         if(window.localStorage.getItem('hiscore') != null) {
             let storedScore = parseInt(window.localStorage.getItem('hiscore'));
             console.log(`storedScore: ${storedScore}`);
@@ -87,6 +89,5 @@ class Listener extends Phaser.Scene{
             window.localStorage.setItem('hiscore', this.highScore.toString());
             this.newHighScore = true;
         }
-}
-
+    }
 }

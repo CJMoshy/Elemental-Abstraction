@@ -4,9 +4,6 @@ class Play extends Phaser.Scene{
     }
 
     init(data){
-
-     
-       
         //main scrolling background
         this.scrollRate = data.config.scrollRate
 
@@ -23,25 +20,21 @@ class Play extends Phaser.Scene{
         //obstacle height, velocity move to obstacle
         this.obstacleHeight = [430, 350]
         this.velocityx = -250
+
         //powerup
         this.powerupKeys = ['powerup-teal', 'powerup-blue', 'powerup-green', 'powerup-red']
         this.currentPowerup = null
  
-        //TODOL fix double jump, its state machine time
+        //player declaration
         this.player = null
 
         //keybinds 
         keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-        keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
-        keySTART = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X) // use x to return to menu and start instead of arrow keys
-
 
         //DEBUG
         debugToggle = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         this.debugEnabled = true
     }
-    
-    preload(){}
 
     create(){
 
@@ -62,12 +55,12 @@ class Play extends Phaser.Scene{
         *  Be playable for at least 15 seconds for a new player of low to moderate skill (1) X
         * Properly transition between Scenes and allow the player to restart w/out having to reload the page (1) X
         * Include some metric of accomplishment that a player can improve over time, e.g., score, survival time, etc. (1) X
+        * Have looping background music* (1) X
         *   
         * 
         * TODO: 
         *  Include in-game instructions using text or other means (e.g., tooltips, tutorial, diagram, etc.) (1)
-        *  Have looping background music* (1)
-        *  Use a minimum of four sound effects for key mechanics, UI, and/or significant events appropriate to your game design (1)
+        *  Use a minimum of four sound effects for key mechanics, UI, and/or significant events appropriate to your game design (1)  -> have 3 need one more
         *  Run without significant crashes or errors (1) 
         *  Include in-game credits for all roles, assets, music, etc. (1)
         *  Submit a playable link on GitHub pages (1)
@@ -81,10 +74,6 @@ class Play extends Phaser.Scene{
             //as you collect element powerups, you gain a permanent score multiplier
             //go as far as you can with all four powerups collected to get the highest score 
 
-        //############
-            //audio
-        //TODO: add HUD
-        //TODO: formatting, code refactor
         //#######################
         //* DEBUG CODE
             debugToggle.on('down', ()=>{
@@ -97,14 +86,16 @@ class Play extends Phaser.Scene{
         //################################################################################
         
         //audio
-        this.sound.removeAll()
-        this.music = this.sound.add('main-soundtrack', {
-            mute: false,
-            volume: 0.1,
-            rate: 1, 
-            loop: true
+        this.time.delayedCall(100,()=>{
+            this.sound.removeAll()
+            this.music = this.sound.add('main-soundtrack', {
+                mute: false,
+                volume: 0.1,
+                rate: 1, 
+                loop: true
+            })
+            this.music.play()
         })
-        this.music.play()
 
         //load backgorund
         if(this.textures.exists('titleScreen')){
@@ -117,7 +108,7 @@ class Play extends Phaser.Scene{
             this.player.anims.play('running_vanilla', true)
         }
 
-        //score text 
+    //text formatting
         this.scoreLeft = this.add.text(50 , 15, 'score → ' + this.score.toString(), {
             fontFamily: 'Comic Sans MS',
             fontSize : '28px',
@@ -145,25 +136,36 @@ class Play extends Phaser.Scene{
             fixedWidth : 0,
         })
 
-    
-        //load ground
+        this.livesRemaining = this.add.text(650 , 350, '❤❤❤❤❤', {
+            fontFamily: 'Comic Sans MS',
+            fontSize : '28px',
+            color : '#000000',
+            align : 'right', 
+            padding : {top : 5, bottom : 5},
+            fixedWidth : 0,
+        })
+
+        //create a ground obj
         this.ground = this.physics.add.body(0, 700,800, 15).setCollideWorldBounds(true).setFriction(0)
+        this.physics.add.collider(this.player, this.ground,null,  null, this) //manage collision with player and ground
 
         //generate platforms, obstacles, powerup, coins
         this.generatePlatforms()
         this.generateObstacles()
-        this.time.delayedCall(5000, ()=>{this.generatePowerup()})
+        this.time.delayedCall(5000, ()=>{this.generatePowerup()}) //wait a second (or 5) before we start powerup gen
 
-        //physics
-        //player/ground collider
-        this.physics.add.collider(this.player, this.ground,null,  null, this)
-
-    
+        //increasing difficulty metric
         this.id_a = setInterval(()=>{
-            this.velocityx -= 10
-            this.scrollRate += 0.2
+            if(this.velocityx > -1000 ){ //define soft max
+                this.velocityx -= 10
+            }
+            if(this.scrollRate < 15){ // ^
+                this.scrollRate += 0.2
+            }
+            this.music.rate += 0.001
         }, 5000)
 
+        //update score every half second -> player is moving 2m/s
         this.id_b = setInterval(()=>{
             this.score += 1*this.player.scoreMultiplier
             this.scoreLeft.text = 'score → ' + this.score.toString()
@@ -171,13 +173,14 @@ class Play extends Phaser.Scene{
             this.distTrav.text = (this.distanceTraveled.toString() + ' m')
         }, 500)
 
+        //track all interval ids for easy cancel
         this.id_container.push(this.id_a)
         this.id_container.push(this.id_b)
-
     }
 
     update(){
-       
+        
+        //end game condition
         if(this.player.lives <= 0){
             
             this.scene.pause()
@@ -187,7 +190,7 @@ class Play extends Phaser.Scene{
             if(this.currentPowerup != null){
                 clearInterval(this.currentPowerup.intervalID)
             }
-            this.scene.start('Listener', {finalScore: this.score})
+            this.scene.start('GameOver', {finalScore: this.score})
         } else{
             //update scrolling screen
             this.playScreen.tilePositionX += this.scrollRate
@@ -195,7 +198,29 @@ class Play extends Phaser.Scene{
             //update player
             this.player.update()
 
+            //current element count
             this.multiplierText.text = 'elements → ' + this.player.scoreMultiplier.toString()
+
+            //real time life tracking
+            switch(this.player.lives){
+                case 1:
+                    this.livesRemaining.text = '❤'
+                    break
+                case 2:
+                    this.livesRemaining.text = '❤❤'
+                    break
+                case 3:
+                    this.livesRemaining.text = '❤❤❤'
+                    break
+                case 4:
+                    this.livesRemaining.text = '❤❤❤❤'
+                    break
+                case 5:
+                    this.livesRemaining.text = '❤❤❤❤❤'
+                    break
+                default:
+                    break
+            }
         }
     }
 
@@ -209,9 +234,13 @@ class Play extends Phaser.Scene{
     }
 
     generateObstacles(){
-        this.id_e = setInterval(()=>{
-            let y = Math.floor(Math.random() * (425 - 150 + 1)) + 150;
-            this.add.sprite(new Obstacle(this, 790, y, 'obstacle-ground', 0, 'obstacle', true, this.velocityx))
+        this.id_e = setInterval(()=>{   
+            let y = Math.floor(Math.random() * (425 - 150 + 1)) + 150
+            if(y < 375){
+                this.add.sprite(new Obstacle(this, 790, y, 'obstacle-air', 0, 'air', true, this.velocityx))
+            } else{
+                this.add.sprite(new Obstacle(this, 790, y, 'obstacle-ground', 0, 'ground', true, this.velocityx))
+            }     
         }, 2500)
         this.id_container.push(this.id_e)
     }
@@ -229,15 +258,7 @@ class Play extends Phaser.Scene{
         let y = Math.floor(Math.random() * (game.config.height));
     
         this.time.delayedCall(4000, ()=>{
-            this.currentPowerup = new Powerup(this, 800, y, color, 0, 'powerup-ready')
-            this.physics.add.collider(this.player, this.currentPowerup, ()=>{    //we have to implemenmt collider here - or do we - beacause create assigns collider to null bc not generated
-                this.player.setVelocity(this.player.body.velocity.x, this.player.body.velocity.y)
-                this.player.lastCollision = color
-                clearInterval(this.currentPowerup.intervalID) 
-                this.sound.play('powerup')
-                this.currentPowerup.destroy()
-                this.generatePowerup()
-            },  null, this)  
+            this.currentPowerup = new Powerup(this, 800, y, color, 0, color)  
         }, null, this)
     }    
 }

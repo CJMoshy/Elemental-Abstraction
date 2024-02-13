@@ -1,7 +1,7 @@
 //created by CJ Moshy
 //TITLE: Elemental Abstraction
-//time
-//creative tilt
+//time: 20 Hours
+//creative tilt: Collecting 'element' powerups gives the player a permanant score multiplier
 
 let config = {
     type: Phaser.AUTO,
@@ -19,7 +19,7 @@ let config = {
             }
         }
     },  
-    scene: [Loader, Menu, Play, Listener]
+    scene: [Loader, Credits, Menu, Play, GameOver]
 }
 
 let game = new Phaser.Game(config)
