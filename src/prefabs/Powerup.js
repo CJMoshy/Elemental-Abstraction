@@ -9,17 +9,19 @@ class Powerup extends Item{
         .setBounce(1)
         .setCollideWorldBounds(true)
 
+        //random movement
         super.intervalID = setInterval(()=>{ 
-            this.setVelocityY(Phaser.Math.Between(this.INITAL_VELOCITY, this.MAX_VELOCITY)) //todo normaiize?
+            this.setVelocityY(Phaser.Math.Between(this.INITAL_VELOCITY, this.MAX_VELOCITY)) 
         }, 250)
 
+        //collider
         scene.physics.add.collider(scene.player, this, ()=>{ 
             scene.player.setVelocity(scene.player.body.velocity.x, scene.player.body.velocity.y)
             scene.player.lastCollision = _name
             clearInterval(this.intervalID) 
             scene.sound.play('powerup')
             this.destroy()
-            scene.generatePowerup()
+            scene.generatePowerup() //spawn more
         },  null, this)  
     } 
 

@@ -11,7 +11,7 @@ class GameOver extends Phaser.Scene{
         //last runs score
         this.checkHighScore(data.finalScore)
 
-        //text formatting
+    //text formatting
         this.time.delayedCall(1000, ()=> {this.sound.play('gameover') //gives cool effect
 
             this.add.text(game.config.width/2, game.config.height/2 - 25, 'GAME OVER',{
@@ -23,7 +23,6 @@ class GameOver extends Phaser.Scene{
                 fixedWidth : 0,
             }).setOrigin(0.5)
 
-             //score text 
             this.scoreLeft = this.add.text(game.config.width/2 - 150, game.config.height/2 + 50, 'your score: ' + data.finalScore.toString(), {
                 fontFamily: 'Comic Sans MS',
                 fontSize : '20px',
@@ -52,6 +51,7 @@ class GameOver extends Phaser.Scene{
                     fixedWidth : 0,
                 }).setOrigin(0.5)
             }
+
         //nav buttons
             this.restartButton = this.add.sprite(game.config.width/2 - 200, 350, 'restart-button').setInteractive()  
             this.restartButton.on('pointerdown', ()=> {
@@ -71,20 +71,15 @@ class GameOver extends Phaser.Scene{
         //function determines if last games score is higher than locally saved highscore and responds appropriately
         if(window.localStorage.getItem('hiscore') != null) {
             let storedScore = parseInt(window.localStorage.getItem('hiscore'));
-            console.log(`storedScore: ${storedScore}`);
-            // see if current score is higher than stored score
-            if(level > storedScore) {
-                console.log(`New high score: ${level}`);
+            if(level > storedScore) {    
                 window.localStorage.setItem('hiscore', level.toString());
                 this.highScore = level;
                 this.newHighScore = true;
-            }else{
-                console.log('No new high score :/');
+            }else{ 
                 this.highScore = parseInt(window.localStorage.getItem('hiscore'));
                 this.newHighScore = false;
             }
         }else{
-            console.log('No high score stored. Creating new.');
             this.highScore = level;
             window.localStorage.setItem('hiscore', this.highScore.toString());
             this.newHighScore = true;

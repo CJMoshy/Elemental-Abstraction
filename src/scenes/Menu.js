@@ -4,7 +4,7 @@ class Menu extends Phaser.Scene{
     }
 
     init(){
-        this.TITLESCREEN_SCROLL_RATE = 2.5
+        this.TITLESCREEN_SCROLL_RATE = 2.5 //endless runner core mechanic
 
         //config obj
         this.gameConfig = {

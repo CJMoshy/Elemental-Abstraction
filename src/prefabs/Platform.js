@@ -13,10 +13,9 @@ class Platform extends Item{
 
         //collider
         scene.physics.add.collider(scene.player, this, ()=>{
-            if(scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S).isDown){
-                scene.player.setVelocityY(250)
+            if(scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S).isDown){ // 'fall' through platform if key press
+                scene.player.setVelocityY(275)
                 this.body.checkCollision.up = false
-                return true
             }
         }, 
       null,this)

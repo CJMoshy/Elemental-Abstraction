@@ -15,13 +15,12 @@ class Obstacle extends Item {
         .setOffset(6.5,13.8)
         break
       default: 
-        console.log('error, improper name')
+        console.log('ERROR: undefined name')
     }
 
     //collider
     scene.physics.add.collider(scene.player, this, ()=>{
       scene.player.lives -= 1
-      console.log(scene.player.lives)
       scene.player.resetFlag = false
       scene.player.setVelocity(-150,-1) //knockback effect
       scene.sound.play('hit')

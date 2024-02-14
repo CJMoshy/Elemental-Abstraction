@@ -49,7 +49,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     update(){
 
+        //update states
         this.FSM.step()
+
         //jump mechanic
         if(!this.isjumping && Phaser.Input.Keyboard.JustDown(keyJUMP)){
             this.anims.pause()
@@ -57,14 +59,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setVelocity(this.PLAVER_JUMP_VELOCITY * this.playerVector.x, this.PLAVER_JUMP_VELOCITY * this.playerVector.y)
             this.scene.time.delayedCall(500, ()=>{
                 this.scene.player.anims.resume()
-            },null, null)
+            }, null, null)
         }
 
-        if(this.y > 125){ //enforce jump height -> TODO maybe change this to jump cooldown
+        if(this.y > 125){ //enforce jump height; ensure players can just spam jump past certain point
             this.isjumping = false
         }
 
-        if(this.resetFlag){
+        if(this.resetFlag){ //constantly maintain correct velocity
             this.fixPosition()
         }
     }
@@ -87,7 +89,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
 }
-
+//define all states (for anims)
 class mainState extends State{
     enter(scene, player){
         player.anims.play('running_vanilla')
@@ -95,16 +97,16 @@ class mainState extends State{
 
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('fire')
                 return
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('water')
                 return
-            case 'powerup-green': //collided with blue
+            case 'powerup-green': 
                 this.stateMachine.transition('earth')
                 return
-            case 'powerup-teal': //collided with blue
+            case 'powerup-teal': 
                 this.stateMachine.transition('air')
                 return
         }
@@ -118,16 +120,15 @@ class fireState extends State{
 
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('fireWater')
-                break
-            case 'powerup-green': //collided with blue
-                console.log('here')
+                return
+            case 'powerup-green': 
                 this.stateMachine.transition('fireEarth')
-                break
-            case 'powerup-teal': //collided with blue
+                return
+            case 'powerup-teal': 
                 this.stateMachine.transition('fireAir')
-                break
+                return
         }
     }
 }
@@ -139,13 +140,13 @@ class waterState extends State{
 
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('fireWater')
                 return
-            case 'powerup-green': //collided with blue
+            case 'powerup-green': 
                 this.stateMachine.transition('earthWater')
                 return
-            case 'powerup-teal': //collided with blue
+            case 'powerup-teal': 
                 this.stateMachine.transition('airWater')
                 return
         }
@@ -159,13 +160,13 @@ class earthState extends State{
 
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('fireEarth')
                 return
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('earthWater')
                 return
-            case 'powerup-teal': //collided with blue
+            case 'powerup-teal': 
                 this.stateMachine.transition('airEarth')
                 return
         }
@@ -177,16 +178,15 @@ class airState extends State{
         player.anims.play('running_air')
     }
 
-    
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('fireAir')
                 return
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('airWater')
                 return
-            case 'powerup-green': //collided with blue
+            case 'powerup-green': 
                 this.stateMachine.transition('airEarth')
                 return
         }
@@ -201,10 +201,10 @@ class fireAirState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('fireAirWater')
                 return
-            case 'powerup-green': //collided with blue
+            case 'powerup-green': 
                 this.stateMachine.transition('fireAirEarth')
                 return
         }
@@ -219,10 +219,10 @@ class fireEarthState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('earthWaterFire')
                 return
-            case 'powerup-teal': //collided with blue
+            case 'powerup-teal': 
                 this.stateMachine.transition('fireAirEarth')
                 return
         }
@@ -237,12 +237,12 @@ class fireWaterState extends State{
 
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-green': //collided with blue
+            case 'powerup-green': 
                 this.stateMachine.transition('earthWaterFire')
-                break
-            case 'powerup-teal': //collided with blue
+                return
+            case 'powerup-teal': 
                 this.stateMachine.transition('fireAirWater')
-                break
+                return
         }
     }
 }
@@ -255,10 +255,10 @@ class airEarthState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue': 
                 this.stateMachine.transition('airEarthWater')
                 return
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('fireAirEarth')
                 return
         }
@@ -273,15 +273,14 @@ class airWaterState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-green': //collided with blue
+            case 'powerup-green': 
                 this.stateMachine.transition('airEarthWater')
                 return
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('fireAirWater')
                 return
         }
     }
-
 }
 
 class earthWaterState extends State{
@@ -292,10 +291,10 @@ class earthWaterState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-teal': //collided with blue
+            case 'powerup-teal': 
                 this.stateMachine.transition('airEarthWater')
                 return
-            case 'powerup-red': //collided with blue
+            case 'powerup-red': 
                 this.stateMachine.transition('earthWaterFire')
                 return
         }
@@ -310,7 +309,7 @@ class fireAirEarthState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-blue': //collided with blue
+            case 'powerup-blue':
                 this.stateMachine.transition('meta')
                 return
         }
@@ -325,7 +324,7 @@ class fireAirWaterState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-green': //collided with blue
+            case 'powerup-green':
                 this.stateMachine.transition('meta')
                 return
         }
@@ -340,7 +339,7 @@ class airEarthWaterState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-red': //collided with blue
+            case 'powerup-red':
                 this.stateMachine.transition('meta')
                 return
         }
@@ -355,7 +354,7 @@ class earthWaterFireState extends State{
  
     execute(scene, player){
         switch(player.lastCollision){
-            case 'powerup-teal': //collided with blue
+            case 'powerup-teal':
                 this.stateMachine.transition('meta')
                 return
         }

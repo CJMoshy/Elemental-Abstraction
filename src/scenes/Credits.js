@@ -4,10 +4,13 @@ class Credits extends Phaser.Scene{
     }
     
     create(){
+
         //divider bar on screen
         this.divider = this.add.graphics()
         this.divider.fillStyle(0x00FFFF, 1)
         this.divider.fillRect(game.config.width/2, 0, 10, 325)
+    
+    //text config    
         this.add.text(game.config.width/4, game.config.height/4, 'CREDITS',{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
@@ -17,7 +20,6 @@ class Credits extends Phaser.Scene{
             fixedWidth : 0,
         }).setOrigin(0.5)
 
-    //text config
         this.add.text(game.config.width/4, game.config.height/3, ' All visual assets created by CJ Moshy',{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
@@ -68,7 +70,6 @@ class Credits extends Phaser.Scene{
         this.menuButton.on('pointerdown', ()=> {
             this.sound.play('click')
             this.scene.start('menuScene')
-        })
-       
+        }) 
     }
 }

@@ -17,8 +17,7 @@ class Play extends Phaser.Scene{
         this.id_d
         this.id_e
 
-        //obstacle height, velocity move to obstacle
-        this.obstacleHeight = [430, 350]
+        //velocity move to obstacle
         this.velocityx = -250
 
         //powerup
@@ -30,25 +29,9 @@ class Play extends Phaser.Scene{
 
         //keybinds 
         keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-
-        //DEBUG
-        debugToggle = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-        this.debugEnabled = true
     }
 
     create(){
-
-        //#######################
-        //* DEBUG CODE
-            debugToggle.on('down', ()=>{
-                // Toggle debug mode
-                this.debugEnabled = !this.debugEnabled;
-        
-                // Toggle debug display for all physics bodies
-                this.physics.world.debugGraphic.setVisible(this.debugEnabled);
-            }, this);
-        //################################################################################
-        
         //audio
         this.time.delayedCall(100,()=>{
             this.sound.removeAll()
@@ -111,7 +94,7 @@ class Play extends Phaser.Scene{
 
         //create a ground obj
         this.ground = this.physics.add.body(0, 700,800, 15).setCollideWorldBounds(true).setFriction(0)
-        this.physics.add.collider(this.player, this.ground,null,  null, this) //manage collision with player and ground
+        this.physics.add.collider(this.player, this.ground, null, null, this) //manage collision with player and ground
 
         //generate platforms, obstacles, powerup, coins
         this.generatePlatforms()
