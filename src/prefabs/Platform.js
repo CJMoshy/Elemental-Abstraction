@@ -12,7 +12,14 @@ class Platform extends Item{
         this.body.checkCollision.right = false
 
         //collider
-        scene.physics.add.collider(scene.player, this, ()=>{console.log('collision @plat')},  null, this) 
+        scene.physics.add.collider(scene.player, this, ()=>{
+            if(scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S).isDown){
+                scene.player.setVelocityY(250)
+                this.body.checkCollision.up = false
+                return true
+            }
+        }, 
+      null,this)
     }
     
     update(){ 
