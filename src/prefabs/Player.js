@@ -10,7 +10,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setScale(0.5)
         this.setCollideWorldBounds(true)
         this.setGravityY(1400)
-        this.setSize(70,240)
+        this.setSize(70,225)
 
         //score, gamestate
         this.scoreMultiplier = 1

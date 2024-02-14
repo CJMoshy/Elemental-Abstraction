@@ -38,42 +38,6 @@ class Play extends Phaser.Scene{
 
     create(){
 
-        /*
-        *  Organization (3 points)
-        *  Submit a link to your GitHub repository that shows a history of multiple meaningful commits with descriptive messages (1) X
-        *
-        * 
-        *  Structure and Design (15 points)
-        *  Your game should:
-        *  Use multiple Scene classes (dictated by your game's style) (1) X
-        *  Have some form of player input/control appropriate to your game design (1) X
-        *  Include one or more animated characters that use a texture atlas* (1) X
-        *  Simulate scrolling with a tileSprite (or equivalent means) (1) X
-        *  Implement proper collision detection (via Arcade Physics or a custom routine) (1) X 
-        *  Use randomness to generate escalating challenge, e.g. terrain, pickups, etc. (1) X
-        *  Be theoretically endless (1) X
-        *  Be playable for at least 15 seconds for a new player of low to moderate skill (1) X
-        * Properly transition between Scenes and allow the player to restart w/out having to reload the page (1) X
-        * Include some metric of accomplishment that a player can improve over time, e.g., score, survival time, etc. (1) X
-        * Have looping background music* (1) X
-        *   
-        * 
-        * TODO: 
-        *  Include in-game instructions using text or other means (e.g., tooltips, tutorial, diagram, etc.) (1)
-        *  Use a minimum of four sound effects for key mechanics, UI, and/or significant events appropriate to your game design (1)  -> have 3 need one more
-        *  Run without significant crashes or errors (1) 
-        *  Include in-game credits for all roles, assets, music, etc. (1)
-        *  Submit a playable link on GitHub pages (1)
-        *  In main.js (or equivalent), include a comment header with your name, game title, approximate hours spent on project, and your creative tilt justification (see below) (1)
-        
-        *
-        * */
-
-            //Winning
-            //your score progresses statically
-            //as you collect element powerups, you gain a permanent score multiplier
-            //go as far as you can with all four powerups collected to get the highest score 
-
         //#######################
         //* DEBUG CODE
             debugToggle.on('down', ()=>{
@@ -244,8 +208,7 @@ class Play extends Phaser.Scene{
         }, 2500)
         this.id_container.push(this.id_e)
     }
-    
-    //TODO: REFACTOR THIS
+ 
     generatePowerup(){
         if(this.powerupKeys.length === 0){
             return

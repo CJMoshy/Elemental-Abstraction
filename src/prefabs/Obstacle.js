@@ -11,9 +11,8 @@ class Obstacle extends Item {
         break
       case 'air':
         this.setScale(4)
-        .setCircle(6, true)
-        .setOffset(5.75, 12.5)
-        .setOrigin(0.5, 0.5)
+        .setCircle(6.2, true)
+        .setOffset(6.5,13.8)
         break
       default: 
         console.log('error, improper name')
