@@ -26,7 +26,7 @@ If you're interested in exploring the code or contributing to the project, feel 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/elemental-abstraction.git
+   git clone https://github.com/CJMoshy/Endlessly-Running.git
    ```
 
 2. Navigate to the project directory:
