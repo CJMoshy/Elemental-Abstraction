@@ -7,7 +7,7 @@ class Credits extends Phaser.Scene{
         //divider bar on screen
         this.divider = this.add.graphics()
         this.divider.fillStyle(0x00FFFF, 1)
-        this.divider.fillRect((game.config.width/2)- 8, 0, 10, 325)
+        this.divider.fillRect(game.config.width/2, 0, 10, 325)
         this.add.text(game.config.width/4, game.config.height/4, 'CREDITS',{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
@@ -22,16 +22,16 @@ class Credits extends Phaser.Scene{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
             color : '#FFFF00',
-            align : 'right', 
+            align : 'left', 
             padding : {top : 5, bottom : 5},
             fixedWidth : 0,
         }).setOrigin(0.5)
 
-        this.add.text(game.config.width/4, game.config.height/2, 'Main Background Music: `Homework` \n https://www.fesliyanstudios.com \n https://www.fesliyanstudios.com/policy',{
+        this.add.text(game.config.width/4, game.config.height/2, 'Background Music: `Late Night Radio`\nKevin MacLeod (incompetech.com)\nLicensed under Creative Commons\nAttribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0',{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
             color : '#00FF00',
-            align : 'right', 
+            align : 'center', 
             padding : {top : 5, bottom : 5},
             fixedWidth : 0,
         }).setOrigin(0.5)
@@ -58,13 +58,13 @@ class Credits extends Phaser.Scene{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
             color : '#FF0000',
-            align : 'left', 
+            align : 'center', 
             padding : {top : 5, bottom : 5},
             fixedWidth : 0,
         }).setOrigin(0.5)
     
         //nav button
-        this.menuButton = this.add.sprite(game.config.width/2, 375, 'menu-button').setInteractive()  
+        this.menuButton = this.add.sprite(game.config.width/2+5, 375, 'menu-button').setInteractive()  
         this.menuButton.on('pointerdown', ()=> {
             this.sound.play('click')
             this.scene.start('menuScene')

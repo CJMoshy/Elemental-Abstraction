@@ -91,7 +91,7 @@ class Play extends Phaser.Scene{
             this.music = this.sound.add('main-soundtrack', {
                 mute: false,
                 volume: 0.1,
-                rate: 1, 
+                rate: 0.75, 
                 loop: true
             })
             this.music.play()
