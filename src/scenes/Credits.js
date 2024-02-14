@@ -54,7 +54,7 @@ class Credits extends Phaser.Scene{
             fixedWidth : 0,
         }).setOrigin(0.5)
 
-        this.add.text(game.config.width - 195, game.config.height/2, 'Press `space` to jump\nAs you run you collect Elements\nElements give permanent score multiplier\nCollect all powerups and go as far as\npossible',{
+        this.add.text(game.config.width - 195, game.config.height/2, 'Press `space` to jump\nPress `s` when on platform to fall through\nAs you run you collect Elements\nElements give permanent score multiplier\nCollect all powerups, go as far as possible',{
             fontFamily: 'Comic Sans MS',
             fontSize : '18px',
             color : '#FF0000',
