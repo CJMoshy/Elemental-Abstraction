@@ -17,7 +17,7 @@ In Elemental Abstraction, you control a character running endlessly through a dy
 
 ## Play Now!
 
-You can play Elemental Abstraction by following this [GitHub Pages link](https://cjmoshy.github.io/Endlessly-Running/).
+You can play Elemental Abstraction by following this [GitHub Pages link](https://cjmoshy.github.io/Elemental-Abstraction/).
 
 ## Development
 
