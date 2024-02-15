@@ -35,7 +35,7 @@ If you're interested in exploring the code or contributing to the project, feel 
    cd elemental-abstraction
    ```
 
-3. Open the `index.html` file in your preferred web browser to play the game locally.
+3. Open the `index.html` file in Google Chrome to play the game locally.
 
 4. To make changes and test them, you may need to set up a local server environment. You can use tools like `http-server` or `live-server` for this purpose.
 
