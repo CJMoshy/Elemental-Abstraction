@@ -41,7 +41,7 @@ If you're interested in exploring the code or contributing to the project, feel 
 
 ## Credits
 
-Elemental Abstraction was created by CJ Moshy and is released under the [MIT License](LICENSE).
+Elemental Abstraction was created by CJ Moshy and is released under the [MIT License](https://github.com/CJMoshy/Elemental-Abstraction/blob/main/LISCENSE.md).
 
 Background Music: 'Late Night Radio'
   Kevin MacLeod (incompetech.com)
